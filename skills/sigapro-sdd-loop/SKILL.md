@@ -19,12 +19,18 @@ If `.agent/skills/tlc-spec-driven/` is missing in the current project, stop and 
 
 ## Pipeline Stages
 
-### Stage 1 — Brainstorm & SDD Drafts
-1. Follow `.agent/skills/tlc-spec-driven/SKILL.md` through `SPECIFY -> DESIGN -> TASKS` (with user brainstorm when requirements are open).
+### Stage 1 — Brainstorm & SDD Drafts (Resume-Aware)
+1. First inspect `.specs/features/<feature>/` (and `.specs/<feature>/` or `STATE.md` if present) to detect existing progress — **NEVER overwrite or redo already-approved artifacts**:
+   - Missing `spec.md` → start at `SPECIFY -> DESIGN -> TASKS`.
+   - `spec.md` exists, missing `design.md` → skip `SPECIFY`, start at `DESIGN -> TASKS`.
+   - `spec.md` + `design.md` exist, missing `tasks.md` → skip `SPECIFY` and `DESIGN`, jump straight to `TASKS` (respecting the approved `design.md`).
+   - `spec.md` + `design.md` + `tasks.md` exist with incomplete tasks → validate existing artifacts and jump straight to **Stage 2** (or **Stage 4** if `STATE.md` already records HITL approval for the current `tasks.md`).
+   - All tasks completed / `validation.md` exists → jump straight to **Stage 5** (`audit-rounds`).
 2. Run deterministic validators if present:
    - `python3 .agent/skills/tlc-spec-driven/scripts/validate_spec.py ...`
    - `python3 .agent/skills/tlc-spec-driven/scripts/validate_tasks.py ...`
-3. Do NOT start `EXECUTE` yet.
+   - `python3 .agent/harness/assert-task-skills.py ... --root .`
+3. Do NOT start `EXECUTE` yet (wait for Stage 2 + Stage 3).
 
 ### Stage 2 — Automated Strong Review + `the-fool`
 Spawn the `spec-critic` subagent (`agent: "spec-critic"`) in a fresh, isolated context passing:

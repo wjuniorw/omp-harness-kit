@@ -86,6 +86,7 @@ Dentro de qualquer projeto que possua `.agent/`, execute no `omp`:
 /sdd-loop <feature ou descrição>
 ```
 
+0. **Detecção automática de progresso (*Resume-Aware*)**: se a feature já tiver `spec.md` e `design.md` aprovados em `.specs/features/<feature>/`, o loop **não refaz** Spec/Design — pula direto para gerar `tasks.md` (ou para a etapa pendente).
 1. **Stage 1 — Drafts (`tlc-spec-driven`)**: gera `spec.md`, `design.md` e `tasks.md` e roda `validate_spec.py`, `validate_tasks.py` + `assert-task-skills.py`.
 2. **Stage 2 — Revisor Forte + `the-fool` (`spec-critic`)**: dispara o subagente `spec-critic` em contexto limpo (ordem **`claudio-combo` → `cw/claude-sonnet-5-high` → `gemini/gemini-4-argon` → `ds-web/deepseek-v4-pro-think`**) para auditar regras/contratos e rodar pre-mortem/red-team.
 3. **Stage 3 — HITL com BTW e Incremento**: abre formulário `ask` apenas para decisões reais, sempre com a opção **"Tirar dúvida / Incrementar esta opção"** e campo `btw_notes` (além de `/btw` ou `Esc`). **Nunca avança para `Execute`** enquanto houver dúvida ou ajuste pendente.
@@ -106,6 +107,15 @@ omp --approval-mode=yolo --max-time=2h --max-cost=15
 - Cria/trabalha em branch `feat/<feature>-yolo` (nunca altera `main` direto).
 - **Proibido** `git push`, deploy, `eas submit`, `docker push`, `kubectl`, `terraform` ou migração em produção.
 - Registra decisões tomadas automaticamente em `.specs/features/<feature>/YOLO-DECISIONS.md` e entrega um resumo matinal em `.specs/features/<feature>/MORNING-REVIEW.md` (ou para imediatamente se o `spec-critic` der `BLOCK` por ambiguidade crítica de negócio).
+
+| Parâmetro / Comando | Função |
+| :--- | :--- |
+| `omp -p "..."` | Modo headless não-interativo (processa o prompt, grava saída e encerra). |
+| `--approval-mode=yolo` | Aprova chamadas de tools sem travar o terminal esperando confirmação. |
+| `--max-time=90m` / `2h` | Encerra a sessão automaticamente ao atingir o tempo máximo. |
+| `--warn-cost=3` | Emite aviso único ao atingir o custo estimado em USD. |
+| `--max-cost=8` | Bloqueia novas chamadas de LLM ao atingir o teto estimado (inclui subagentes; em `-p` sai com código `3`). |
+| `caffeinate -i <cmd>` | Utilitário nativo do macOS (`/usr/bin/caffeinate`) que impede o Mac de dormir por ociosidade enquanto o comando roda. |
 
 ---
 
