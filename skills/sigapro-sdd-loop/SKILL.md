@@ -64,3 +64,24 @@ If `.agent/skills/audit-rounds/` exists (or `.agent/harness/pipeline/on-feature-
    - Accept residual risk / defer specific `RISK-XXX` items
    - Ask a question / increment remediation scope (`btw`)
 3. Repeat until open high/critical defects and rule violations are resolved or explicitly accepted by the user.
+
+---
+
+## Safe Overnight Mode (`--yolo` / `--overnight`)
+
+Activated when the invocation includes `--yolo` or `--overnight` (e.g., `/sdd-loop <feature> --yolo`). Designed for unattended overnight execution so the developer can review everything in the morning.
+
+### Hard Safety Guardrails (NEVER Violated)
+1. **NO deploys, NO remote pushes, NO production mutations:** NEVER execute `git push`, `gh pr merge`, `vercel`, `eas build/submit`, `docker push`, `kubectl`, `terraform apply`, `fly deploy`, `npm publish`, or production DB migrations/writes.
+2. **Branch isolation:** Before editing code, if currently on `main`, `master`, `develop`, or `production`, create and switch to a feature branch (`git checkout -b feat/<feature>-yolo`). Local commits on the feature branch are allowed; `main` stays untouched.
+3. **Never silence checks:** NEVER skip/delete failing tests, linters, or `.agent/harness/assert-task-skills.py` to force a green run.
+
+### Behavior Overrides Under `--yolo`
+- **Stage 1 (Drafts):** Use documented project conventions/contracts to fill minor ambiguities instead of waiting on `ask`, recording assumptions in `spec.md`. Run `validate_spec.py`, `validate_tasks.py`, and `assert-task-skills.py`.
+- **Stage 2 (`spec-critic` + `the-fool`):** Runs identically in isolated context.
+- **Stage 3 (Auto-Resolve Gate):** Do NOT block on `ask`.
+  - If `verdict == "BLOCK"` due to missing business rules or contradicting contracts that cannot be inferred safely from the codebase: **STOP cleanly**, do not enter Stage 4, and write `.specs/features/<feature>/MORNING-REVIEW.md` detailing the exact blocker.
+  - Otherwise (`APPROVE` or `REVISE` with `auto_fixable` / clear recommended `hitl_decisions`): apply `auto_fixable` and the conservative/recommended option for each `hitl_decisions` item, log every decision and rationale in `.specs/features/<feature>/YOLO-DECISIONS.md`, re-run validators, and proceed to **Stage 4**.
+- **Stage 4 (Execute + Verifier):** Execute all tasks (reading each task's `Skill:` first), run full relevant tests/lint/typecheck, and run the independent `Verifier` (`author != verifier`) + `validate_state.py`.
+- **Stage 5 (`audit-rounds` + Bounded Remediation):** Run `audit-rounds` and auto-execute at most **2 remediation rounds** for `HIGH`/`CRITICAL` findings or rule violations. Any remaining `MEDIUM`/`LOW` or architectural trade-offs stay logged in `audits-rounds/risk-register.md` and `MORNING-REVIEW.md`.
+- **Final Morning Deliverable:** Write `.specs/features/<feature>/MORNING-REVIEW.md` containing: branch name, `git diff --stat`, tasks completed vs blocked, auto-decisions taken (`YOLO-DECISIONS.md`), test/lint/verifier outputs, open risks, and recommended next commands for human review.

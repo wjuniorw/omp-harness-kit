@@ -92,6 +92,21 @@ Dentro de qualquer projeto que possua `.agent/`, execute no `omp`:
 4. **Stage 4 — Execute + Verifier**: executa as tasks ativando a `Skill:` de cada uma, dispara hooks de `.agent/harness/pipeline/` e roda o `Verifier` independente (`validate_state.py`).
 5. **Stage 5 — `audit-rounds` → Remediação**: roda auditoria pós-execução (`architectural-analysis`, `security-best-practices`, `security-threat-model` → `risk-register.md`) e reinicia o loop em `remediation-tasks.md` se houver riscos pendentes.
 
+### Modo Noturno Seguro (`--yolo` / `--overnight`, sem deploy)
+Quer deixar o agente trabalhando numa feature enquanto você descansa e revisar tudo pronto de manhã?
+```bash
+# Opção 1 — Headless (salva log completo e encerra ao terminar, com teto de tempo e custo):
+omp -p --approval-mode=yolo --max-time=2h --max-cost=15 \
+  "/sdd-loop <feature ou descrição> --yolo" | tee /tmp/sdd-overnight.log
+
+# Opção 2 — Interativo (abra com yolo e rode /sdd-loop com --yolo):
+omp --approval-mode=yolo --max-time=2h --max-cost=15
+# dentro do omp: /sdd-loop <feature> --yolo
+```
+- Cria/trabalha em branch `feat/<feature>-yolo` (nunca altera `main` direto).
+- **Proibido** `git push`, deploy, `eas submit`, `docker push`, `kubectl`, `terraform` ou migração em produção.
+- Registra decisões tomadas automaticamente em `.specs/features/<feature>/YOLO-DECISIONS.md` e entrega um resumo matinal em `.specs/features/<feature>/MORNING-REVIEW.md` (ou para imediatamente se o `spec-critic` der `BLOCK` por ambiguidade crítica de negócio).
+
 ---
 
 ## 3. Como Atualizar `tlc-spec-driven` e `the-fool` Sem Perder Seu Assert de Skills
