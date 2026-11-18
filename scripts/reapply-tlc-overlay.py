@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 reapply-tlc-overlay.py - Idempotentemente reanexa o gancho de assert de skills
-em .agent/skills/tlc-spec-driven apos atualizacoes upstream.
+em tlc-spec-driven (.agent/skills/ ou .agents/skills/) apos updates upstream.
 
 O assert real vive fora da pasta da skill (.agent/harness/assert-task-skills.py
 + .agent/harness/skill-map.json), entao updates upstream nunca apagam suas regras.
@@ -56,17 +56,23 @@ def upsert_block(file_path: Path, block: str) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Reaplica overlay de Skill assertion no tlc-spec-driven")
-    parser.add_argument("--project", default=".", help="Raiz do projeto ou template contendo .agent/skills/tlc-spec-driven")
+    parser.add_argument("--project", default=".", help="Raiz do projeto ou template")
     args = parser.parse_args()
 
-    tlc_dir = Path(args.project).resolve() / ".agent" / "skills" / "tlc-spec-driven"
-    if not tlc_dir.is_dir():
-        print(f"ERRO: {tlc_dir} nao encontrado.", file=sys.stderr)
+    root = Path(args.project).resolve()
+    candidates = [
+        root / ".agent" / "skills" / "tlc-spec-driven",
+        root / ".agents" / "skills" / "tlc-spec-driven",
+    ]
+    found = [p for p in candidates if p.is_dir()]
+    if not found:
+        print(f"ERRO: tlc-spec-driven nao encontrado em .agent/skills/ nem .agents/skills/ de {root}", file=sys.stderr)
         return 2
 
-    for rel, block in BLOCKS.items():
-        status = upsert_block(tlc_dir / rel, block)
-        print(f"{tlc_dir / rel}: {status}")
+    for tlc_dir in found:
+        for rel, block in BLOCKS.items():
+            status = upsert_block(tlc_dir / rel, block)
+            print(f"{tlc_dir / rel}: {status}")
     return 0
 
 

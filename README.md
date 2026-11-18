@@ -92,9 +92,14 @@ O problema clássico: editar `tlc-spec-driven/SKILL.md`, `references/tasks.md` e
    - `.agent/harness/assert-task-skills.py`: lê `tasks.md` + `skill-map.json` e falha determinísticamente se alguma task de código ficar com `Skill: NONE` ou apontar para skill inexistente.
 2. **Atualização 1-comando com reaplicação automática do hook:**
 ```bash
+# Atualiza via npx skills add (tech-leads-club/agent-skills + jeffallan/claude-skills)
+# e reaplica o overlay em .agents/skills/tlc-spec-driven (ou .agent/skills/ com --in-agent-dir):
 ./scripts/sync-upstream-skills.sh /caminho/do/seu/projeto
+./scripts/sync-upstream-skills.sh /caminho/do/seu/projeto --in-agent-dir
+# Modo offline usando clone local em ~/code/agent-skills:
+./scripts/sync-upstream-skills.sh /caminho/do/seu/projeto --local
 ```
-Esse script copia a versão nova de `tlc-spec-driven` (e `the-fool`) de `~/code/agent-skills/packages/skills-catalog/skills` e roda `reapply-tlc-overlay.py`, injetando apenas o marcador `<!-- META-HARNESS-SKILL-ASSERT:START --> ... <!-- META-HARNESS-SKILL-ASSERT:END -->` apontando para `.agent/harness/assert-task-skills.py`.
+O script baixa `tlc-spec-driven` via `npx skills add` (e `the-fool` global), e depois roda `reapply-tlc-overlay.py` injetando apenas o marcador `<!-- META-HARNESS-SKILL-ASSERT:START --> ... <!-- META-HARNESS-SKILL-ASSERT:END -->` apontando para `.agent/harness/assert-task-skills.py`.
 
 ---
 
@@ -129,4 +134,17 @@ cp project-overlay/.agent/skills-manifest.json <projeto>/.agent/
 cp project-overlay/.agent/harness/assert-task-skills.py <projeto>/.agent/harness/
 cp project-overlay/.agent/harness/skill-map.example.json <projeto>/.agent/harness/skill-map.json
 # Adicione .agents/ ao .gitignore do projeto e ajuste skill-map.json para a stack
+```
+
+> **Onde ficam as `rules/` e ferramentas de scaffold (`scaffold-feature.sh`, `scaffold-use-case.sh`, etc.)?**
+> Este repositório é agnóstico de stack (runtime `omp` + SDD loop + critic + supply chain). Regras e scaffolds opinativos por tecnologia continuam nos kits dedicados (`nextjs-ai-ready-kit`, `nestjs-api-ai-ready-kit`, `golang-api-ai-ready-kit`, `expo-mobile-ai-ready-kit`, `rn-community-cli-ai-ready-kit` e futuro Rust).
+
+---
+
+## 6. Diagnóstico & Setup Assistido por IA (`.llms.md`)
+
+Prefere que um agente diagnostique sua máquina, teste o OmniRoute/Gateway, detecte a stack do projeto e configure o overlay automaticamente? Aponte seu agente para `.llms.md`:
+
+```bash
+omp "Leia ~/code/omp-harness-kit/.llms.md, diagnostique meu ambiente e este projeto, e configure o que faltar."
 ```
