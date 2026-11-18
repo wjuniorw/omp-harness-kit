@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "description": "Meta-skill dependency manifest (complemento ao skills-lock.json para o 'pnpm de skills').",
+  "projectSkillsDir": ".agent/skills",
+  "externalSkillsDir": ".agents/skills",
+  "required": [
+    "tlc-spec-driven",
+    "audit-rounds"
+  ],
+  "dependencies": {
+    "audit-rounds": [
+      "architectural-analysis",
+      "security-best-practices",
+      "security-threat-model"
+    ],
+    "sigapro-sdd-loop": [
+      "the-fool"
+    ]
+  }
+}

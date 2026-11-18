@@ -1,0 +1,44 @@
+modelRoles:
+  default: sigapro-gateway/wjunior-coding
+  smol: sigapro-gateway/ds-web/deepseek-v4-flash
+  slow: sigapro-gateway/cw/claude-sonnet-5-high
+  plan: sigapro-gateway/cw/claude-sonnet-5-high
+  commit: sigapro-gateway/auto/coding:cheap
+  vision: sigapro-gateway/cw/claude-sonnet-5-medium
+  judge: sigapro-gateway/ds-web/deepseek-v4-flash
+retry:
+  fallbackChains:
+    default:
+      - sigapro-gateway/auto/best-coding-fast
+      - sigapro-gateway/auto/coding
+      - sigapro-gateway/cw/claude-sonnet-5-medium
+    smol:
+      - sigapro-gateway/auto/coding:cheap
+      - sigapro-gateway/auto/coding:free
+    slow:
+      - sigapro-gateway/gemini/gemini-4-argon
+      - sigapro-gateway/ds-web/deepseek-v4-pro-think
+      - sigapro-gateway/auto/coding:reliable
+      - sigapro-gateway/gc/grok-4.5
+    plan:
+      - sigapro-gateway/gemini/gemini-4-argon
+      - sigapro-gateway/ds-web/deepseek-v4-pro-think
+      - sigapro-gateway/auto/coding:reliable
+    commit:
+      - sigapro-gateway/ds-web/deepseek-v4-flash
+      - sigapro-gateway/no-think/cw/claude-sonnet-5
+    vision:
+      - sigapro-gateway/ds-web/deepseek-v4-flash
+      - sigapro-gateway/cw/claude-sonnet-5-low
+    judge:
+      - sigapro-gateway/auto/coding:cheap
+      - sigapro-gateway/no-think/cw/claude-sonnet-5
+symbolPreset: unicode
+theme:
+  dark: titanium
+setupVersion: 3
+composer:
+  shape: box
+update:
+  auto: true
+inlineToolDescriptors: "off"

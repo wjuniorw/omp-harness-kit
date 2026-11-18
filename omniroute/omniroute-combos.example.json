@@ -1,0 +1,65 @@
+{
+  "description": "Template sanitizado de combos para OmniRoute local (substitua pelos provedores/contas conectados no seu painel)",
+  "combos": [
+    {
+      "name": "wjunior-coding",
+      "strategy": "priority",
+      "models": [
+        { "model": "gemini/gemini-4-hydrogen", "weight": 100 },
+        { "model": "ds-web/deepseek-v4-chat", "weight": 80 },
+        { "model": "cw/claude-sonnet-5-medium", "weight": 60 }
+      ]
+    },
+    {
+      "name": "claudio-combo",
+      "strategy": "round-robin",
+      "description": "Rotaciona suas contas Claude antes do fallback para Gemini 4 Argon no omp",
+      "models": [
+        { "model": "cw/claude-opus-5" },
+        { "model": "cw/claude-sonnet-5-high" }
+      ]
+    },
+    {
+      "name": "auto/coding",
+      "strategy": "priority",
+      "models": [
+        { "model": "gemini/gemini-4-hydrogen" },
+        { "model": "ds-web/deepseek-v4-chat" },
+        { "model": "qwen/qwen3-coder-plus" }
+      ]
+    },
+    {
+      "name": "auto/coding:reliable",
+      "strategy": "priority",
+      "models": [
+        { "model": "gemini/gemini-4-argon" },
+        { "model": "cw/claude-sonnet-5-high" },
+        { "model": "ds-web/deepseek-v4-pro-think" }
+      ]
+    },
+    {
+      "name": "auto/coding:cheap",
+      "strategy": "priority",
+      "models": [
+        { "model": "gemini/gemini-3.8-flash" },
+        { "model": "ds-web/deepseek-v4-flash" }
+      ]
+    },
+    {
+      "name": "auto/coding:free",
+      "strategy": "priority",
+      "models": [
+        { "model": "nvidia/qwen3-coder-480b" },
+        { "model": "openrouter/free" }
+      ]
+    },
+    {
+      "name": "auto/best-coding-fast",
+      "strategy": "priority",
+      "models": [
+        { "model": "gemini/gemini-3.8-flash" },
+        { "model": "ds-web/deepseek-v4-flash" }
+      ]
+    }
+  ]
+}

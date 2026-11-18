@@ -1,0 +1,7 @@
+.DS_Store
+.env
+.env.*
+omp/models.yml
+*.bak
+__pycache__/
+node_modules/

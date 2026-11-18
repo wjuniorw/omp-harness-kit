@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "require_for_code_tasks": true,
+  "rules": [
+    {
+      "match": "(use[-_ ]?case|application/|domain/)",
+      "skill": "create-use-case",
+      "only_if_installed": true
+    },
+    {
+      "match": "(features/|create[-_ ]feature|bounded context|module\\.)",
+      "skill": "create-feature",
+      "only_if_installed": true
+    },
+    {
+      "match": "(components/|screens/|view[-_ ]?model|\\.tsx$)",
+      "skill": "create-component",
+      "only_if_installed": true
+    },
+    {
+      "match": "(\\.go\\b|internal/(domain|application|infra|transport)|cmd/)",
+      "skill": "golang-pro",
+      "only_if_installed": true
+    },
+    {
+      "match": "(\\.rs\\b|Cargo\\.toml)",
+      "skill": "rust-pro",
+      "only_if_installed": true
+    },
+    {
+      "match": "(listener|event|subscriber)",
+      "skill": "create-listener",
+      "only_if_installed": true
+    },
+    {
+      "match": "(performance|re-render|memory leak|bundle|optimiz)",
+      "skill": "extreme-software-optimization",
+      "only_if_installed": true
+    },
+    {
+      "match": "(\\.spec\\.|\\.test\\.|_test\\.go)",
+      "skill": "write-tests",
+      "only_if_installed": true
+    }
+  ]
+}

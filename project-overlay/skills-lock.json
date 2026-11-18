@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "architectural-analysis": {
+      "source": "pedronauck/skills",
+      "sourceType": "github",
+      "skillPath": "skills/mine/architectural-analysis/SKILL.md",
+      "computedHash": "39ae517bcb92e9803c699d847b88c7425fb3600b3425c041388d585b93c4fa3f"
+    },
+    "golang-pro": {
+      "source": "pedronauck/skills",
+      "sourceType": "github",
+      "skillPath": "skills/curated/golang-pro/SKILL.md",
+      "computedHash": "c90a0798a12ea2d9191508439ec3191dd96713310615260ebe82ec5a09a4a434"
+    }
+  }
+}
