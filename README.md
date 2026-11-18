@@ -2,6 +2,18 @@
 
 Kit portável para instalar em segundos o workflow completo de engenharia assistida por IA no **`omp` (Oh My Pi)**, preservando o Meta-Harness específico de cada projeto (`.agent/`) e mantendo skills externas (`.agents/`) gerenciadas como dependências (estilo `pnpm`).
 
+> **Quer que o próprio agente diagnostique sua máquina/projeto e configure tudo para você?**
+> ```bash
+> git clone https://github.com/wjuniorw/omp-harness-kit.git ~/code/omp-harness-kit
+> omp "Leia ~/code/omp-harness-kit/.llms.md, diagnostique meu ambiente e este projeto, e me guie na configuracao."
+> ```
+
+## Para quem é este repositório?
+
+- **Para quem usa `omp` (Oh My Pi) / Claude Code** e quer um fluxo disciplinado de **Spec-Driven Development** (`/sdd-loop`) com revisão crítica automática (`spec-critic` + `the-fool`), checkpoints humanos conversacionais (`ask` + `/btw`) e auditoria pós-execução (`audit-rounds`).
+- **Para quem quer manter skills externas como dependências** (`.agents/` no `.gitignore` + `skills-lock.json` + `.agent/skills-manifest.json`), sem poluir o repositório com arquivos baixados de terceiros.
+- **Para quem personaliza regras por projeto** e quer atualizar `tlc-spec-driven` e `the-fool` do upstream sem perder o vínculo automático `Skill:` nas tasks.
+
 ---
 
 ## Arquitetura do Kit
@@ -136,8 +148,16 @@ cp project-overlay/.agent/harness/skill-map.example.json <projeto>/.agent/harnes
 # Adicione .agents/ ao .gitignore do projeto e ajuste skill-map.json para a stack
 ```
 
-> **Onde ficam as `rules/` e ferramentas de scaffold (`scaffold-feature.sh`, `scaffold-use-case.sh`, etc.)?**
-> Este repositório é agnóstico de stack (runtime `omp` + SDD loop + critic + supply chain). Regras e scaffolds opinativos por tecnologia continuam nos kits dedicados (`nextjs-ai-ready-kit`, `nestjs-api-ai-ready-kit`, `golang-api-ai-ready-kit`, `expo-mobile-ai-ready-kit`, `rn-community-cli-ai-ready-kit` e futuro Rust).
+> **Procurando kits completos já opinativos por stack (`rules/`, scaffolds, arquitetura)?**
+> Este repositório é o **motor global agnóstico de stack**. Para projetos prontos com regras de arquitetura, scaffolds (`scaffold-feature.sh`, `scaffold-use-case.sh`, etc.) e skills nativas, confira os starter kits irmãos:
+>
+> | Stack | Repositório |
+> | :--- | :--- |
+> | **Next.js 16 + React 19 + Vanilla Extract (Clean Arch + FSD + MVVM)** | [`wjuniorw/nextjs-ai-ready-kit`](https://github.com/wjuniorw/nextjs-ai-ready-kit) |
+> | **NestJS 11+ Modular Monolith + Tactical DDD + CBAC** | [`wjuniorw/nestjs-api-ai-ready-kit`](https://github.com/wjuniorw/nestjs-api-ai-ready-kit) |
+> | **Golang API + Standard Layout + Clean Arch** | [`wjuniorw/golang-api-ai-ready-kit`](https://github.com/wjuniorw/golang-api-ai-ready-kit) |
+> | **Expo Mobile + Expo Router + Unistyles + MVVM** | [`wjuniorw/expo-mobile-ai-ready-kit`](https://github.com/wjuniorw/expo-mobile-ai-ready-kit) |
+> | **Bare React Native CLI (New Arch) + React Navigation + MVVM** | [`wjuniorw/rn-community-cli-ai-ready-kit`](https://github.com/wjuniorw/rn-community-cli-ai-ready-kit) |
 
 ---
 
