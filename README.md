@@ -91,8 +91,9 @@ Dentro de qualquer projeto que possua `.agent/`, execute no `omp`:
 1. **Stage 1 — Drafts (`tlc-spec-driven`)**: gera `spec.md`, `design.md` e `tasks.md` e roda `validate_spec.py`, `validate_tasks.py` + `assert-task-skills.py`.
 2. **Stage 2 — Revisor Forte + `the-fool` (`spec-critic`)**: dispara o subagente `spec-critic` em contexto limpo (ordem **`claudio-combo` → `cw/claude-sonnet-5-high` → `gemini/gemini-4-argon` → `ds-web/deepseek-v4-pro-think`**) para auditar regras/contratos e rodar pre-mortem/red-team.
 3. **Stage 3 — HITL com BTW e Incremento**: abre formulário `ask` apenas para decisões reais, sempre com a opção **"Tirar dúvida / Incrementar esta opção"** e campo `btw_notes` (além de `/btw` ou `Esc`). **Nunca avança para `Execute`** enquanto houver dúvida ou ajuste pendente.
-4. **Stage 4 — Execute + Verifier**: executa as tasks ativando a `Skill:` de cada uma, dispara hooks de `.agent/harness/pipeline/` e roda o `Verifier` independente (`validate_state.py`).
-5. **Stage 5 — `audit-rounds` → Remediação**: roda auditoria pós-execução (`architectural-analysis`, `security-best-practices`, `security-threat-model` → `risk-register.md`) e reinicia o loop em `remediation-tasks.md` se houver riscos pendentes.
+4. **Stage 4 — Execute + Verifier**: executa as tasks ativando a `Skill:` de cada uma, dispara hooks de `.agent/harness/pipeline/` e roda o `Verifier` independente (`validate_state.py`, gerando `validation.md`).
+5. **Stage 4.5 — Auditoria Pós-Validação (`spec-critic` Mode 2)**: o modelo pensante compara `validation.md` × `tasks.md` × `spec.md` × `design.md` contra o código/diff real para detectar drift, critérios faltantes ou falsos `PASS`, abrindo remediação antes de fechar.
+6. **Stage 5 — `audit-rounds` → Remediação**: roda auditoria pós-execução (`architectural-analysis`, `security-best-practices`, `security-threat-model` → `risk-register.md`) e reinicia o loop em `remediation-tasks.md` se houver riscos pendentes.
 
 ### Modo Noturno Seguro (`--yolo` / `--overnight`, sem deploy)
 Quer deixar o agente trabalhando numa feature enquanto você descansa e revisar tudo pronto de manhã?

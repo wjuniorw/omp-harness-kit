@@ -25,7 +25,7 @@ If `.agent/skills/tlc-spec-driven/` is missing in the current project, stop and 
    - `spec.md` exists, missing `design.md` → skip `SPECIFY`, start at `DESIGN -> TASKS`.
    - `spec.md` + `design.md` exist, missing `tasks.md` → skip `SPECIFY` and `DESIGN`, jump straight to `TASKS` (respecting the approved `design.md`).
    - `spec.md` + `design.md` + `tasks.md` exist with incomplete tasks → validate existing artifacts and jump straight to **Stage 2** (or **Stage 4** if `STATE.md` already records HITL approval for the current `tasks.md`).
-   - All tasks completed / `validation.md` exists → jump straight to **Stage 5** (`audit-rounds`).
+   - All tasks completed / `validation.md` exists → run **Stage 4.5** (if not yet audited) and **Stage 5** (`audit-rounds`).
 2. Run deterministic validators if present:
    - `python3 .agent/skills/tlc-spec-driven/scripts/validate_spec.py ...`
    - `python3 .agent/skills/tlc-spec-driven/scripts/validate_tasks.py ...`
@@ -62,6 +62,17 @@ Use the native `ask` tool (in Portuguese) to present:
 2. Execute tasks per `tlc-spec-driven` (`EXECUTE`), running `.agent/harness/pipeline/on-task-complete.sh` / `check_commit.py` if configured.
 3. Run the independent `Verifier` (`author != verifier`) and `validate_state.py`.
 
+### Stage 4.5 — Post-Validation Drift & Consistency Audit (Thinking Model)
+Immediately after `validation.md` is produced by Stage 4:
+1. Spawn `spec-critic` (`agent: "spec-critic"`, Mode 2) in an isolated context passing paths to `spec.md`, `design.md`, `tasks.md`, `STATE.md`, and `validation.md`.
+2. Instruct it to verify real repo/diff evidence and detect any inconsistency:
+   - Spec/design requirements missing, weakened, or contradicted in `validation.md` or implementation.
+   - Tasks marked done in `tasks.md` without genuine verification or relying on mocks/skipped checks.
+   - Unverified `PASS` claims or inaccurate file/symbol citations in `validation.md`.
+3. If `verdict` is `REVISE` or `BLOCK` (inconsistencies found):
+   - Present findings via HITL `ask` (with `btw_notes` + `btw_or_increment` support) and write concrete remediation tasks into `.specs/features/<feature>/remediation-tasks.md` (or update code/tests + re-run `Verifier` + update `validation.md`).
+   - Re-verify until `spec-critic` Mode 2 returns `APPROVE` (or user explicitly accepts minor residual notes).
+
 ### Stage 5 — Post-Execute `audit-rounds` & Remediation Loop
 If `.agent/skills/audit-rounds/` exists (or `.agent/harness/pipeline/on-feature-complete.sh`):
 1. Run `audit-rounds` to execute the 3 parallel audits (`architectural-analysis`, `security-best-practices`, `security-threat-model`), update `audits-rounds/risk-register.md`, and generate `summary.md` + `remediation-tasks.md` when defects exist.
@@ -89,5 +100,6 @@ Activated when the invocation includes `--yolo` or `--overnight` (e.g., `/sdd-lo
   - If `verdict == "BLOCK"` due to missing business rules or contradicting contracts that cannot be inferred safely from the codebase: **STOP cleanly**, do not enter Stage 4, and write `.specs/features/<feature>/MORNING-REVIEW.md` detailing the exact blocker.
   - Otherwise (`APPROVE` or `REVISE` with `auto_fixable` / clear recommended `hitl_decisions`): apply `auto_fixable` and the conservative/recommended option for each `hitl_decisions` item, log every decision and rationale in `.specs/features/<feature>/YOLO-DECISIONS.md`, re-run validators, and proceed to **Stage 4**.
 - **Stage 4 (Execute + Verifier):** Execute all tasks (reading each task's `Skill:` first), run full relevant tests/lint/typecheck, and run the independent `Verifier` (`author != verifier`) + `validate_state.py`.
+- **Stage 4.5 (Post-Validation Drift Audit):** Run `spec-critic` Mode 2 (`validation.md` vs `spec.md` + `design.md` + `tasks.md`). Auto-remediate concrete gaps/inconsistencies (capped at 2 loops) and re-run `Verifier` + update `validation.md`; log any unresolved blocker in `MORNING-REVIEW.md`.
 - **Stage 5 (`audit-rounds` + Bounded Remediation):** Run `audit-rounds` and auto-execute at most **2 remediation rounds** for `HIGH`/`CRITICAL` findings or rule violations. Any remaining `MEDIUM`/`LOW` or architectural trade-offs stay logged in `audits-rounds/risk-register.md` and `MORNING-REVIEW.md`.
 - **Final Morning Deliverable:** Write `.specs/features/<feature>/MORNING-REVIEW.md` containing: branch name, `git diff --stat`, tasks completed vs blocked, auto-decisions taken (`YOLO-DECISIONS.md`), test/lint/verifier outputs, open risks, and recommended next commands for human review.
