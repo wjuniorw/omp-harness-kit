@@ -82,6 +82,16 @@ if (fs.existsSync(manifestPath)) {
         }
       }
     }
+    const recs = manifest.recommended || {};
+    for (const [parent, children] of Object.entries(recs)) {
+      if (findSkill(parent)) {
+        for (const child of children) {
+          if (!findSkill(child)) {
+            warnings.push(`Skill recomendada para '${parent}' ausente: '${child}'. Instale via: npx skills add pedronauck/skills -s ${child} -a universal -y`);
+          }
+        }
+      }
+    }
   } catch (err) {
     errors.push(`Falha ao ler .agent/skills-manifest.json: ${err.message}`);
   }

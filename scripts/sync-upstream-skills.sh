@@ -5,21 +5,25 @@ set -euo pipefail
 # e reaplica automaticamente o overlay de Skill assertion do Meta-Harness.
 #
 # Uso:
-#   ./scripts/sync-upstream-skills.sh [CAMINHO_PROJETO] [--in-agent-dir] [--local]
+#   ./scripts/sync-upstream-skills.sh [CAMINHO_PROJETO] [--in-agent-dir] [--with-qa] [--local]
 #
 # Flags:
 #   --in-agent-dir  Copia o tlc-spec-driven baixado de .agents/skills/ para .agent/skills/
 #                   (util para templates/projetos que versionam .agent/skills/tlc-spec-driven).
+#   --with-qa       Tambem instala/atualiza qa-report e qa-execution (pedronauck/skills)
+#                   para rodar junto com smoke-test-rounds em homologacao.
 #   --local         Usa clone local em $UPSTREAM_SKILLS_DIR em vez de baixar via npx skills.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="."
 IN_AGENT_DIR=0
+WITH_QA=0
 USE_LOCAL=0
 
 for arg in "$@"; do
   case "$arg" in
     --in-agent-dir) IN_AGENT_DIR=1 ;;
+    --with-qa) WITH_QA=1 ;;
     --local) USE_LOCAL=1 ;;
     -h|--help)
       sed -n '3,14p' "$0"
@@ -53,6 +57,10 @@ else
 
   echo "-> Atualizando the-fool global via npx skills (jeffallan/claude-skills)..."
   npx --yes skills add jeffallan/claude-skills -s the-fool -g -a universal -y
+  if [[ "$WITH_QA" -eq 1 ]]; then
+    echo "-> Instalando/atualizando qa-report e qa-execution via npx skills (pedronauck/skills)..."
+    (cd "$PROJECT_ABS" && npx --yes skills add pedronauck/skills -s qa-report qa-execution -a universal -y)
+  fi
 fi
 
 echo "-> Reaplicando overlay de Skill assertion..."

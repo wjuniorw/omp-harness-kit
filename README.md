@@ -27,6 +27,7 @@ omp-harness-kit/
 ├── commands/sdd-loop.md           # Comando /sdd-loop
 ├── skills/
 │   ├── sigapro-sdd-loop/          # Orquestrador: TLC SDD -> spec-critic -> HITL (BTW) -> Execute -> Audit
+│   ├── smoke-test-rounds/         # Orquestrador de smoke tests existentes, regressao e readiness (+ qa-report/qa-execution)
 │   └── the-fool/                  # Devil's advocate, pre-mortem, red-team, scan de vieses
 ├── project-overlay/
 │   ├── .agent/skills-manifest.json
@@ -117,6 +118,17 @@ omp --approval-mode=yolo --max-time=2h --max-cost=15
 | `--max-cost=8` | Bloqueia novas chamadas de LLM ao atingir o teto estimado (inclui subagentes; em `-p` sai com código `3`). |
 | `caffeinate -i <cmd>` | Utilitário nativo do macOS (`/usr/bin/caffeinate`) que impede o Mac de dormir por ociosidade enquanto o comando roda. |
 
+### Smoke Tests, Regressão & Readiness (`smoke-test-rounds` + `qa-report` / `qa-execution`)
+Depois de implementar ou antes de liberar homologação, use a skill `smoke-test-rounds`:
+- **Não cria smoke tests novos**: lê `.specs/features/*` e descobre os runners já existentes no repo (`scripts/smoke/`, `tests/smoke/`, `package.json`, `Makefile`).
+- **Calcula regressão entre rodadas** (`smoke-rounds/round-{N}-{env}-{YYYY-MM-DD}/`) e gera relatório de **Readiness** (`READY` / `PARTIAL` / `BLOCKED` / `UNCOVERED`).
+- **Integra com `qa-report` e `qa-execution`** (`pedronauck/skills`) em staging/homologação para validar jornadas de usuário e registrar bugs em `.agent/qa/bugs/`.
+
+```bash
+# Opcional: instalar qa-report e qa-execution junto na sincronizacao do projeto
+./scripts/sync-upstream-skills.sh /caminho/do/seu/projeto --with-qa
+```
+
 ---
 
 ## 3. Como Atualizar `tlc-spec-driven` e `the-fool` Sem Perder Seu Assert de Skills
@@ -132,7 +144,7 @@ O problema clássico: editar `tlc-spec-driven/SKILL.md`, `references/tasks.md` e
 # Atualiza via npx skills add (tech-leads-club/agent-skills + jeffallan/claude-skills)
 # e reaplica o overlay em .agents/skills/tlc-spec-driven (ou .agent/skills/ com --in-agent-dir):
 ./scripts/sync-upstream-skills.sh /caminho/do/seu/projeto
-./scripts/sync-upstream-skills.sh /caminho/do/seu/projeto --in-agent-dir
+./scripts/sync-upstream-skills.sh /caminho/do/seu/projeto --in-agent-dir --with-qa
 # Modo offline usando clone local em ~/code/agent-skills:
 ./scripts/sync-upstream-skills.sh /caminho/do/seu/projeto --local
 ```

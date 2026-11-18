@@ -54,9 +54,10 @@ cp "$KIT_DIR/omp/config.yml" "$OMP_AGENT_DIR/config.yml"
 cp "$KIT_DIR/omp/agents/spec-critic.md" "$OMP_AGENT_DIR/agents/spec-critic.md"
 cp "$KIT_DIR/commands/sdd-loop.md" "$CLAUDE_CMD_DIR/sdd-loop.md"
 
-rm -rf "$GLOBAL_SKILLS_DIR/sigapro-sdd-loop" "$GLOBAL_SKILLS_DIR/the-fool"
+rm -rf "$GLOBAL_SKILLS_DIR/sigapro-sdd-loop" "$GLOBAL_SKILLS_DIR/the-fool" "$GLOBAL_SKILLS_DIR/smoke-test-rounds"
 cp -R "$KIT_DIR/skills/sigapro-sdd-loop" "$GLOBAL_SKILLS_DIR/sigapro-sdd-loop"
 cp -R "$KIT_DIR/skills/the-fool" "$GLOBAL_SKILLS_DIR/the-fool"
+cp -R "$KIT_DIR/skills/smoke-test-rounds" "$GLOBAL_SKILLS_DIR/smoke-test-rounds"
 
 # Renderiza models.yml sem expor segredos no git
 python3 - "$KIT_DIR/omp/models.yml.template" "$OMP_AGENT_DIR/models.yml" "$OMP_GATEWAY_URL" "$OMP_API_KEY" <<'PY'
@@ -78,5 +79,6 @@ echo "  - $OMP_AGENT_DIR/agents/spec-critic.md"
 echo "  - $CLAUDE_CMD_DIR/sdd-loop.md"
 echo "  - $GLOBAL_SKILLS_DIR/sigapro-sdd-loop"
 echo "  - $GLOBAL_SKILLS_DIR/the-fool"
+echo "  - $GLOBAL_SKILLS_DIR/smoke-test-rounds"
 echo ""
 echo "Proximo passo: entre em um projeto com .agent/ e rode 'omp' -> '/sdd-loop <feature>'"

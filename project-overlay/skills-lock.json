@@ -13,6 +13,20 @@
       "sourceType": "github",
       "skillPath": "skills/mine/architectural-analysis/SKILL.md",
       "computedHash": "39ae517bcb92e9803c699d847b88c7425fb3600b3425c041388d585b93c4fa3f"
+    },
+    "qa-execution": {
+      "source": "pedronauck/skills",
+      "commit": "93655db210f1860822215d5a9bd86f580ffb1239",
+      "sourceType": "github",
+      "skillPath": "skills/mine/qa-execution/SKILL.md",
+      "computedHash": "cc7c219ad2c78cda07e77e876045bb090e9e647b069f1212497140733152d902"
+    },
+    "qa-report": {
+      "source": "pedronauck/skills",
+      "commit": "93655db210f1860822215d5a9bd86f580ffb1239",
+      "sourceType": "github",
+      "skillPath": "skills/mine/qa-report/SKILL.md",
+      "computedHash": "2b7cba1d16fef17f7b5328ced5d1e5845f561e875ba69728720b524e5b584694"
     }
   }
 }

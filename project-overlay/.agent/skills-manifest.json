@@ -16,5 +16,11 @@
     "sigapro-sdd-loop": [
       "the-fool"
     ]
+  },
+  "recommended": {
+    "smoke-test-rounds": [
+      "qa-report",
+      "qa-execution"
+    ]
   }
 }
