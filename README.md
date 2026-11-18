@@ -37,6 +37,7 @@ omp-harness-kit/
 │   ├── skills-lock.json           # Lockfile compatível com `npx skills experimental_install`
 │   └── .gitignore.snippet         # `.agents/` gitignored (igual node_modules/)
 ├── scripts/
+│   ├── apply-project-overlay.sh   # Bootstrap idempotente para projetos novos, sem .agent/ ou ja existentes
 │   ├── reapply-tlc-overlay.py     # Reanexa hook no tlc-spec-driven apos update upstream
 │   ├── sync-upstream-skills.sh    # Atualiza tlc-spec-driven / the-fool e reaplica overlay
 │   └── check-skills.mjs           # "pnpm check" de skills (lockfile + grafo de dependencias)
@@ -176,14 +177,29 @@ python3 .agent/harness/assert-task-skills.py --root .
 
 ---
 
-## 5. Aplicando em Projetos e Templates Existentes (`~/code/templates/`)
+## 5. Instalando Atualizações em Projetos (Novos, Sem `.agent/` e Já Existentes)
 
-Para equipar qualquer template ou projeto existente sem recriar nada do zero:
+### A) Atualizar Skills Globais da Máquina (`sigapro-sdd-loop`, `smoke-test-rounds`, `the-fool`, `spec-critic`)
+As skills orquestradoras e o `spec-critic` ficam **globais** em `~/.agents/skills/` e `~/.omp/agent/agents/` (por isso não precisam estar copiadas dentro de `<projeto>/.agent/skills/`):
 ```bash
-cp project-overlay/.agent/skills-manifest.json <projeto>/.agent/
-cp project-overlay/.agent/harness/assert-task-skills.py <projeto>/.agent/harness/
-cp project-overlay/.agent/harness/skill-map.example.json <projeto>/.agent/harness/skill-map.json
-# Adicione .agents/ ao .gitignore do projeto e ajuste skill-map.json para a stack
+cd ~/code/omp-harness-kit && git pull && ./install.sh
+```
+
+### B) Projeto Novo ou em Andamento **SEM** `.agent/`
+Rode 1 comando para criar `.agent/harness/`, `skills-manifest.json`, `skills-lock.json`, `.gitignore` e instalar `tlc-spec-driven` + `qa-report` + `qa-execution`:
+```bash
+./scripts/apply-project-overlay.sh /caminho/do/seu/projeto --with-qa
+```
+Depois ajuste `.agent/harness/skill-map.json` caso sua stack tenha skills específicas.
+
+### C) Projeto Existente que **JÁ TEM** `.agent/` (ex.: `sigapro`)
+Se o projeto já possui `.agent/rules/`, `audit-rounds`, `tlc-spec-driven` etc., rode o overlay com `--in-agent-dir` (preserva `rules/`, `skill-map.json`, `skills-lock.json` e `.agent/skills/*` existentes):
+```bash
+# Apenas overlay (assert-task-skills.py, skills-manifest.json, skills-lock.json) + hook no tlc-spec-driven:
+./scripts/apply-project-overlay.sh ~/envolva-ti/sigapro --in-agent-dir --skip-sync
+
+# Ou tambem atualizar tlc-spec-driven + qa-report + qa-execution upstream:
+./scripts/apply-project-overlay.sh ~/envolva-ti/sigapro --in-agent-dir --with-qa
 ```
 
 > **Procurando kits completos já opinativos por stack (`rules/`, scaffolds, arquitetura)?**
