@@ -95,5 +95,8 @@ fi
 if command -v node >/dev/null 2>&1; then
   node "$SCRIPT_DIR/check-skills.mjs" --root "$PROJECT_ABS" || true
 fi
+echo ""
+echo "Dica: revise a pasta .agent/ (.agent/harness/skill-map.json e eventuais .agent/rules/)."
+echo "Se o seu projeto segue uma arquitetura propria (MVC, modular, etc.), adapte as rules/ para o fit do seu repo."
 
 echo "Concluido! Rode '/sdd-loop <feature>' dentro de $PROJECT_ABS."

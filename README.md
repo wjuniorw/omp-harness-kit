@@ -186,11 +186,11 @@ cd ~/code/omp-harness-kit && git pull && ./install.sh
 ```
 
 ### B) Projeto Novo ou em Andamento **SEM** `.agent/`
-Rode 1 comando para criar `.agent/harness/`, `skills-manifest.json`, `skills-lock.json`, `.gitignore` e instalar `tlc-spec-driven` + `qa-report` + `qa-execution`:
+O kit injeta apenas o motor SDD agnóstico — **ele não impõe DDD, Clean Arch, FSD ou MVVM** se o seu projeto já segue outra organização de pastas e padrões:
 ```bash
 ./scripts/apply-project-overlay.sh /caminho/do/seu/projeto --with-qa
 ```
-Depois ajuste `.agent/harness/skill-map.json` caso sua stack tenha skills específicas.
+> **Convite à customização:** depois de rodar o script (ou ao adotar um dos starter kits), dê uma olhada na pasta `.agent/` (`rules/`, `system-prompt.md` e `harness/skill-map.json`). Se o seu time já tem arquitetura própria (MVC, vertical slice, modular simples, etc.), adapte as `.agent/rules/` e o `skill-map.json` para espelhar as convenções do **seu** projeto — o harness funciona ainda melhor quando reflete a arquitetura real do repo.
 
 ### C) Projeto Existente que **JÁ TEM** `.agent/` (ex.: `sigapro`)
 Se o projeto já possui `.agent/rules/`, `audit-rounds`, `tlc-spec-driven` etc., rode o overlay com `--in-agent-dir` (preserva `rules/`, `skill-map.json`, `skills-lock.json` e `.agent/skills/*` existentes):
