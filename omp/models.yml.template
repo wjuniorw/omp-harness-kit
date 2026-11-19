@@ -138,6 +138,39 @@ providers:
           output: 3.75
           cacheRead: 0.075
           cacheWrite: 0.75
+      - id: gemini/gemini-4-neon
+        name: Gemini 4 Neon (Engineering AI direto, 1M)
+        reasoning: true
+        input: [text, image]
+        contextWindow: 1048576
+        maxTokens: 65536
+        cost:
+          input: 0
+          output: 0
+          cacheRead: 0
+          cacheWrite: 0
+      - id: gemini/gemini-4-carbon
+        name: Gemini 4 Carbon (Engineering AI direto, 1M)
+        reasoning: true
+        input: [text, image]
+        contextWindow: 1048576
+        maxTokens: 32768
+        cost:
+          input: 2.0
+          output: 10.0
+          cacheRead: 0.1
+          cacheWrite: 0
+      - id: gemini/gemini-3.1-pro-preview
+        name: Gemini 3.1 Pro Preview (Engineering AI direto, raciocínio 1M)
+        reasoning: true
+        input: [text, image]
+        contextWindow: 1048576
+        maxTokens: 65536
+        cost:
+          input: 2.0
+          output: 12.0
+          cacheRead: 0.2
+          cacheWrite: 2.0
       - id: cw/claude-sonnet-5-high
         name: Claude Sonnet 5 High (Raciocínio profundo, arquitetura, tools + visão)
         reasoning: true
