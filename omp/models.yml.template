@@ -145,9 +145,9 @@ providers:
         contextWindow: 1048576
         maxTokens: 65536
         cost:
-          input: 0
-          output: 0
-          cacheRead: 0
+          input: 3.0
+          output: 15.0
+          cacheRead: 0.15
           cacheWrite: 0
       - id: gemini/gemini-4-carbon
         name: Gemini 4 Carbon (Engineering AI direto, 1M)
